@@ -6,6 +6,13 @@ let board = [
     ['-', '-', '-']
 ];
 
+$.ajax({
+    type: "PUT",
+    url: "/board",
+    contentType: "application/json",
+    data: JSON.stringify(board)
+});
+
 let play = function (r, c) {
     console.log(`Hai premuto sulla casella: ${r} ${c}`);
     if (board[r][c] === '-') {
@@ -13,15 +20,19 @@ let play = function (r, c) {
         console.log("Prima di inviare al server...");
         console.log(board);
         // send the board to the server
+        $.ajax({
+            type: "PUT",
+            url: "/board",
+            contentType: "application/json",
+            data: JSON.stringify(board)
+        });
         // update the web board on the client after receiving the response
-        // ...
-        console.log("Dopo la risposta del server...");
-        console.log(board);
-        updateBoard(board);
+        $.getJSON("/board").done(updateBoard);
     }
 }
 
-let updateBoard = function(board) {
+let updateBoard = function(boardResponse) {
+    board = boardResponse;
     for (r in board) {
         for (c in board) {
             let symbol = board[r][c];
